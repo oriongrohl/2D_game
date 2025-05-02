@@ -2,6 +2,7 @@ package entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -15,17 +16,26 @@ public class Player extends Entity{
 	GamePanel gp;
 	KeyHandler keyH;
 
+	public final int screenX;
+	public final int screenY;
+	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		this.gp = gp;
 		this.keyH=keyH;
 		
+		this.screenX=gp.screenWidth/2 - (gp.tileSize/2);
+		this.screenY=gp.screenHeight/2 - (gp.tileSize/2);
+		
+		solidArea = new Rectangle(8,16,32,32); // x, y, width, height
+		
 		setDefaultValues();
 		getPlayerImage();
 	}
+	
 	private void setDefaultValues() {
 		//default players position
-		x=200;
-		y=200;
+		worldX=gp.tileSize * 23;
+		worldY=gp.tileSize * 21;
 		speed=4;
 	}
 	
@@ -38,7 +48,7 @@ public class Player extends Entity{
 			runLeft = ImageIO.read(getClass().getResourceAsStream("/player/girl_run_left.png"));
 			runLeft2 = ImageIO.read(getClass().getResourceAsStream("/player/girl_run_left_2.png"));
 			runRight = ImageIO.read(getClass().getResourceAsStream("/player/girl_run_right.png"));
-			runRight = ImageIO.read(getClass().getResourceAsStream("/player/girl_run_right.png"));
+			runRight2 = ImageIO.read(getClass().getResourceAsStream("/player/girl_run_right_2.png"));
 			standing = ImageIO.read(getClass().getResourceAsStream("/player/girl_standing.png"));
 		}catch(IOException e) {
 			e.printStackTrace();
@@ -50,23 +60,42 @@ public class Player extends Entity{
 		if(keyH.anyKeyPressed) {
 			if(keyH.upArrowPressed) {
 				direction = "up";
-				y -= speed;	
+				worldY -= speed;
 			}
 			else if(keyH.downArrowPressed) {
 				direction="down";
-				y += speed;
+				worldY += speed;
 			}
 			if(keyH.leftArrowPressed) { // si le ponemos un else no puede andar en diagonal!!!
 				direction="left";
-				x -= speed;
+				worldX -= speed;
 			}
 			else if(keyH.rightArrowPressed) {
 				direction="right";
-				x += speed;
+				worldX += speed;
 			}
 			
-			// sprite
+			// CHECKS TILE COLLITION
+			//collisionOn = false;
+			//gp.cChecker.checkTile(this);
 			
+			// IF COLLITION IS FALSE, PLAYER MOVES
+			/*if(collisionOn == false) {
+				if(direction.equals("up")) {
+					worldY -= speed;					
+				}
+				else if(direction.equals("down")) {
+					worldY += speed;					
+				}
+				if(direction.equals("left")) {
+					worldX -= speed;
+				}
+				else if(direction.equals("right")) {
+					worldX += speed;
+				}
+			}*/
+			
+			// sprite
 			spriteCounter++;
 			if(spriteCounter > 12) { //changes every n frames
 				if(spriteNum == 1) {
@@ -112,13 +141,18 @@ public class Player extends Entity{
 			}
 			break;
 		case "right":
-			image=runRight;
+			if(spriteNum==1) {
+				image = runRight;
+			}
+			if(spriteNum==2) {
+				image=runRight2;
+			}
 			break;
 		case "standing":
 			image=standing;
 			break;
 		}
-		g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+		g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 		
 	}
 	
