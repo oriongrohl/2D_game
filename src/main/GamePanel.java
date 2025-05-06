@@ -38,8 +38,6 @@ public class GamePanel extends JPanel implements Runnable{
 	public CollisionChecker cChecker = new CollisionChecker(this);
 	public Player player = new Player(this,keyH);
 	
-	
-	
 	public GamePanel(Color color) {
 		this.setPreferredSize( // sets the size of this GamePanel
 				new Dimension(screenWidth, screenHeight)

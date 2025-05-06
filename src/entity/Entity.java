@@ -12,6 +12,9 @@ public class Entity {
 	
 	public String direction = "down"; // inicialize the player to the most basic direction possible so theres now exception for direction being empty at draw() method (my solution)
 
+	public String directionAuxX = "straight";
+	public String directionAuxY = "straight";
+	
 	public int spriteCounter = 0;
 	public int spriteNum = 1;
 	

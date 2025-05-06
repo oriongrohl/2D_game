@@ -57,35 +57,87 @@ public class Player extends Entity{
 	
 	public void update() {
 		direction = "standing";
+		//directionAux = "straight";
 		if(keyH.anyKeyPressed) {
 			if(keyH.upArrowPressed) {
 				direction = "up";
+				directionAuxY="up";
 				worldY -= speed;
 			}
 			else if(keyH.downArrowPressed) {
 				direction="down";
+				directionAuxY="down";				
 				worldY += speed;
 			}
 			if(keyH.leftArrowPressed) { // si le ponemos un else no puede andar en diagonal!!!
 				direction="left";
+				directionAuxX="left";
 				worldX -= speed;
 			}
 			else if(keyH.rightArrowPressed) {
 				direction="right";
+				directionAuxX="right";
 				worldX += speed;
 			}
+			// else if(!keyH.rightArrowPressed||!keyH.leftArrowPressed){
+			 	//directionAux="straight";}
 			
 			// CHECKS TILE COLLITION
-			//collisionOn = false;
-			//gp.cChecker.checkTile(this);
+			collisionOn = false;
+			gp.cChecker.checkTile(this);
 			
+			// IF COLLISION IS TRUE OVERLAP SPEED
+			if(collisionOn == true) {
+				if(direction.equals("up")) {
+					/*if(directionAuxX.equals("right")) {
+						worldX -= speed;
+					}
+					if(directionAuxX.equals("left")) {
+						worldX += speed;
+					}*/
+					worldY += speed;		
+				}
+				else if(direction.equals("down")) {
+					worldY -= speed;
+				}
+				if(direction.equals("left")) {
+					if(directionAuxY.equals("up") && keyH.upArrowPressed) {
+						worldY += speed;
+					}
+					if(directionAuxY.equals("down") && keyH.downArrowPressed) {
+						worldY -= speed;
+					}
+					//else if (!directionAuxY.equals("up")){
+						//worldY += speed;		
+					//}
+					worldX += speed;
+
+				}
+				else if(direction.equals("right")) {
+					if(directionAuxY.equals("up") && keyH.upArrowPressed) {
+						worldY += speed;
+					}
+					if(directionAuxY.equals("down") && keyH.downArrowPressed) {
+						worldY -= speed;
+					}
+					worldX -= speed;
+				}
+			}
 			// IF COLLITION IS FALSE, PLAYER MOVES
 			/*if(collisionOn == false) {
 				if(direction.equals("up")) {
-					worldY -= speed;					
+					worldY -= speed;		
 				}
 				else if(direction.equals("down")) {
-					worldY += speed;					
+					worldY += speed;
+					if(directionAux.equals("left")&&keyH.leftArrowPressed) {
+						worldX -= speed; // no ENTRA
+						System.out.println("ENTRA left");
+					}
+					else if(directionAux.equals("right")&&keyH.rightArrowPressed) {
+						worldX += speed;
+						System.out.println("ENTRA right");
+					}
 				}
 				if(direction.equals("left")) {
 					worldX -= speed;
